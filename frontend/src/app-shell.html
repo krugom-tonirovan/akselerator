@@ -1,0 +1,165 @@
+<div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="На главную">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 36 36" fill="none"><path d="M18 4.5 8.5 19h6l-4 7h15l-4-7h6L18 4.5Z" fill="currentColor"/><path d="M18 24v7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M5 31h26" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </span>
+        <span class="brand-copy"><strong>ПОЛЕ · ЛЕС</strong><small>геопространственный двойник</small></span>
+      </a>
+      <div class="topbar-center"><span class="status-dot"></span> Проект дипломной работы <span class="topbar-divider">/</span> <span class="muted">Республика Калмыкия · Элиста</span></div>
+      <div class="topbar-actions">
+        <span class="model-chip" id="model-chip" title="Random Forest обучен на наблюдениях meteo.ru и RP5 станции Элиста."><span class="chip-glyph">✳</span> Элиста <span class="chip-sep">·</span> модель готовится</span>
+        <button class="icon-button" id="about-button" title="О проекте" aria-label="О проекте">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <aside class="sidebar">
+        <div class="sidebar-heading">
+          <div class="eyebrow">ПЛАНИРОВЩИК · 01</div>
+          <h1>Подбор<br>лесополосы</h1>
+          <p>Обведите поле и нажмите «Рассчитать». Система сама подставит характерные условия пыльных бурь Элисты и объяснит выбор места.</p>
+        </div>
+
+        <section class="panel-section parcel-section" aria-labelledby="parcel-heading">
+          <div class="section-heading">
+            <div class="section-index">01</div>
+            <div><h2 id="parcel-heading">Участок</h2><p>Выберите поле на карте</p></div>
+            <button class="text-button" id="clear-parcel" type="button" hidden>Сбросить</button>
+          </div>
+          <div class="parcel-card" id="parcel-card">
+            <div class="parcel-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m4 6 6-2 5 3 5-2v13l-5 2-5-3-6 2V6Z"/><path d="m10 4v13m5-10v13"/></svg></div>
+            <div class="parcel-copy"><strong id="parcel-state">Участок не выбран</strong><span id="parcel-meta">Обведите поле свободной линией</span></div>
+            <span class="parcel-area" id="parcel-area">— га</span>
+          </div>
+          <div class="parcel-actions">
+            <button class="button button-lasso" id="lasso-button" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 5c-2-2-7-1-11 2s-6 8-4 10 7 1 11-2 6-8 4-10Z"/><path d="M4 18c3 2 8 0 11-2"/><path d="m14 17 1 3 3-1"/></svg>
+              <span id="lasso-label">Обвести участок</span>
+              <kbd>⌘</kbd>
+            </button>
+            <button class="button button-quiet" id="demo-button" type="button" title="Показать пример участка">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11 12 4l9 7v9a1 1 0 0 1-1 1h-6v-6h-4v6H4a1 1 0 0 1-1-1v-9Z"/></svg>
+              Пример
+            </button>
+          </div>
+          <div class="lasso-toolbox" id="lasso-toolbox" hidden>
+            <p id="lasso-hint">Кликайте по карте, чтобы ставить вершины, или ведите курсор с зажатой кнопкой. Enter — сохранить, Esc — отменить.</p>
+            <div class="lasso-tool-actions">
+              <button id="undo-draw" type="button" disabled>↶ Отменить</button>
+              <button id="delete-selected-vertex" type="button" disabled>− Удалить точку</button>
+              <button id="finish-drawing" type="button" class="finish-drawing" disabled>Готово</button>
+            </div>
+          </div>
+        </section>
+
+        <div class="section-separator"></div>
+
+        <section class="panel-section weather-section" aria-labelledby="weather-heading">
+          <div class="section-heading">
+            <div class="section-index">02</div>
+            <div><h2 id="weather-heading">Сценарий пыльной бури</h2><p>Подставлен автоматически по архиву Элисты</p></div>
+            <span class="section-weather-icon" aria-hidden="true">☼</span>
+          </div>
+          <div class="auto-scenario" id="auto-scenario">
+            <span class="scenario-badge" id="scenario-badge">ЗАГРУЗКА АРХИВА</span>
+            <strong id="scenario-title">Типичный эпизод пыльной бури</strong>
+            <p id="scenario-summary">Метеопараметры появятся после загрузки модели.</p>
+            <small id="scenario-basis">Сценарий описывает исторические эпизоды, а не погоду на сегодня.</small>
+            <small class="planting-note">Линии предлагаются за внешней границей поля. Проверьте, что там разрешена посадка и нет дороги или чужого участка.</small>
+          </div>
+          <details class="advanced-settings">
+            <summary><span>Параметры проектирования</span><svg viewBox="0 0 24 24"><path d="m7 10 5 5 5-5"/></svg></summary>
+            <div class="advanced-grid">
+              <label class="input-card"><span>Высота деревьев</span><span class="input-value"><input id="height" type="number" value="15" min="4" max="35" step="1"><b>м</b></span></label>
+              <label class="input-card"><span>Пористость полосы</span><span class="input-value"><input id="porosity" type="number" value="0.35" min="0.1" max="0.8" step="0.05"><b>доля</b></span></label>
+              <label class="input-card full-width"><span>&#1056;&#1077;&#1078;&#1080;&#1084;&#32;&#1087;&#1086;&#1076;&#1073;&#1086;&#1088;&#1072;&#32;&#1083;&#1077;&#1089;&#1086;&#1087;&#1086;&#1083;&#1086;&#1089;</span><span class="input-value"><select id="strips" aria-label="&#1056;&#1077;&#1078;&#1080;&#1084;&#32;&#1087;&#1086;&#1076;&#1073;&#1086;&#1088;&#1072;&#32;&#1083;&#1077;&#1089;&#1086;&#1087;&#1086;&#1083;&#1086;&#1089;"><option value="auto" selected>&#1040;&#1074;&#1090;&#1086;&#1084;&#1072;&#1090;&#1080;&#1095;&#1077;&#1089;&#1082;&#1080;&#32;&#1087;&#1086;&#32;&#1088;&#1072;&#1089;&#1095;&#1105;&#1090;&#1085;&#1086;&#1081;&#32;&#1079;&#1072;&#1097;&#1080;&#1090;&#1077;</option></select></span></label>
+            </div>
+          <p class="advanced-note">&#1052;&#1086;&#1076;&#1077;&#1083;&#1100;&#32;&#1076;&#1086;&#1073;&#1072;&#1074;&#1083;&#1103;&#1077;&#1090;&#32;&#1087;&#1086;&#1083;&#1086;&#1089;&#1099;&#44;&#32;&#1087;&#1086;&#1082;&#1072;&#32;&#1082;&#1072;&#1078;&#1076;&#1072;&#1103;&#32;&#1079;&#1072;&#1084;&#1077;&#1090;&#1085;&#1086;&#32;&#1088;&#1072;&#1089;&#1096;&#1080;&#1088;&#1103;&#1077;&#1090;&#32;&#1079;&#1072;&#1097;&#1080;&#1090;&#1091;&#32;&#1080;&#1083;&#1080;&#32;&#1089;&#1085;&#1080;&#1078;&#1072;&#1077;&#1090;&#32;&#1088;&#1072;&#1089;&#1095;&#1105;&#1090;&#1085;&#1099;&#1081;&#32;&#1080;&#1085;&#1076;&#1077;&#1082;&#1089;&#46;&#32;&#1055;&#1077;&#1088;&#1077;&#1082;&#1083;&#1102;&#1095;&#1072;&#1081;&#1090;&#1077;&#32;&#1086;&#1090;&#1076;&#1077;&#1083;&#1100;&#1085;&#1099;&#1077;&#32;&#1083;&#1080;&#1085;&#1080;&#1080;&#32;&#1074;&#32;&#1087;&#1072;&#1085;&#1077;&#1083;&#1080;&#32;&#1088;&#1077;&#1079;&#1091;&#1083;&#1100;&#1090;&#1072;&#1090;&#1072;&#46;</p>
+          </details>
+        </section>
+
+        <div class="sidebar-footer">
+          <button class="button button-primary" id="calculate-button" type="button" disabled>
+            <span id="calculate-label">Загрузка модели Элисты</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+          </button>
+          <div class="data-source"><span class="source-dot"></span><span>Метеоряд станции Элиста<br><small>2010–2024 · meteo.ru + RP5</small></span><button id="source-info" type="button" aria-label="Информация об источнике">i</button></div>
+        </div>
+      </aside>
+
+      <section class="map-panel" aria-label="Карта и варианты размещения">
+        <div class="map-viewport" id="map-viewport" role="application" aria-label="Карта. Перетаскивайте для перемещения, колесо мыши — масштаб.">
+          <div class="tile-layer" id="tile-layer" aria-hidden="true"></div>
+          <div class="map-fallback" id="map-fallback" hidden><div class="fallback-contours"></div><span>Не удалось загрузить карту. Проверьте доступ к интернету и OpenStreetMap/Esri. Расчёт модели работает отдельно.</span></div>
+          <svg class="map-overlay" id="map-overlay" aria-hidden="true" preserveAspectRatio="none"><defs><clipPath id="parcel-clip" clipPathUnits="userSpaceOnUse"><path id="parcel-clip-path"></path></clipPath><marker id="zone-arrow-head" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 7 3.5 0 7Z" fill="#537753"></path></marker></defs><g id="parcel-layer"></g><g id="zone-layer" clip-path="url(#parcel-clip)"></g><g id="recommendation-layer"></g><g id="drawing-layer"></g></svg>
+          <div class="map-top-left">
+            <div class="study-area"><span class="pin-dot"></span><span>Республика Калмыкия</span><span class="study-divider">·</span><span>Россия</span><svg viewBox="0 0 24 24"><path d="m7 10 5 5 5-5"/></svg></div>
+            <div class="map-coordinates" id="map-coordinates">46.37° с. ш. &nbsp; 44.33° в. д.</div>
+          </div>
+          <div class="map-top-right">
+            <div class="layer-control" role="group" aria-label="Подложка карты"><button class="layer-button active" data-layer="streets" type="button">Карта</button><button class="layer-button" data-layer="satellite" type="button">Спутник</button></div>
+            <div class="zoom-control"><button id="zoom-in" aria-label="Приблизить" type="button">+</button><span id="zoom-level">13</span><button id="zoom-out" aria-label="Отдалить" type="button">−</button></div>
+          </div>
+           <div class="map-side-tools"><button id="locate-button" class="map-tool" aria-label="Вернуться к Элисте" title="Вернуться к Элисте" type="button"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg></button><button id="north-button" class="map-tool north-tool" aria-label="На север" title="Север" type="button"><span>С</span><svg viewBox="0 0 24 24"><path d="m12 3 4 10-4-2-4 2 4-10Z"/><path d="M12 11v10"/></svg></button></div>
+          <div class="wind-map-card" id="wind-map-card"><span class="wind-map-icon" id="wind-map-icon">➜</span><span><small>ДОМИНИРУЮЩИЙ ВЕТЕР</small><strong id="wind-map-label">СЗ → ЮВ</strong></span></div>
+          <div class="map-bottom-left"><div class="map-legend" id="map-legend" hidden><span class="legend-kicker">ЗОНА ВЕТРОВОЙ ЗАЩИТЫ</span><div class="legend-gradient"><i></i><span>0H</span><span>10H</span><span>20H</span></div><small>H — высота лесополосы. Стрелка у зоны показывает её сектор ветра</small></div><div class="map-attribution" id="map-attribution">© OpenStreetMap</div></div>
+          <div class="map-bottom-right"><div class="scale-bar"><span></span><small id="scale-label">500 м</small></div><span class="map-crs">WGS 84</span></div>
+          <div class="map-selection-toast" id="map-toast" hidden><span class="toast-check">✓</span><span><strong>Участок выделен</strong><small>Границы можно перерисовать</small></span><button id="dismiss-toast" aria-label="Закрыть" type="button">×</button></div>
+          <div class="map-loading" id="map-loading" hidden><span class="spinner"></span>Модель рассчитывает варианты…</div>
+        </div>
+        <div class="map-footer">
+          <div class="map-foot-left"><span class="foot-pulse"></span><span id="map-foot-status">Карта готова к выбору участка</span><span class="footer-divider">·</span><span>Масштаб <b id="footer-zoom">1:25 000</b></span></div>
+          <div class="map-foot-right"><span class="method-tag"><i>✳</i> RF + аэродинамический профиль</span><button id="method-link" class="footer-link" type="button">Метод расчёта <svg viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg></button></div>
+        </div>
+      </section>
+
+      <aside class="results-rail" id="results-rail" aria-live="polite">
+        <div class="results-empty" id="results-empty">
+          <div class="empty-graphic"><svg viewBox="0 0 120 120" fill="none"><circle cx="60" cy="60" r="45" stroke="currentColor" stroke-dasharray="2 5"/><path d="M60 27 42 58h12l-8 14h28l-8-14h12L60 27Z" fill="currentColor" opacity=".16"/><path d="M60 71v20M32 87c8-5 14-6 22-3m13 0c8-3 14-2 22 3" stroke="currentColor" stroke-linecap="round" stroke-width="2"/><path d="M25 49c10-7 17-8 25-7m20 0c9-1 16 0 25 6" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"/></svg></div>
+          <span class="empty-label">ОБЛАСТЬ РАСЧЁТА</span><h2>Сценарий<br>уже подготовлен</h2><p>Обведите поле и нажмите «Рассчитать». Ветер и другие условия система возьмёт из истории пыльных бурь Элисты.</p>
+          <div class="empty-step"><span>01</span><span>Обведите поле на карте</span><svg viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></div>
+          <div class="empty-step"><span>02</span><span>Нажмите «Рассчитать»</span><svg viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></div>
+          <div class="empty-step"><span>03</span><span>Сравните варианты лесополос</span><svg viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></div>
+          <div class="study-note"><span class="note-icon">i</span><span><strong>Пилотная область</strong><small>Наблюдения метеостанции Элиста, индекс ВМО 34861.</small></span></div>
+        </div>
+
+        <div class="results-content" id="results-content" hidden>
+          <div class="results-header"><div><div class="eyebrow">РЕЗУЛЬТАТ · СЦЕНАРИЙ</div><h2>Варианты защиты</h2></div><div class="result-actions"><button id="report-button" class="export-button" type="button" title="Скачать понятный отчёт" aria-label="Скачать отчёт"><svg viewBox="0 0 24 24"><path d="M7 3h7l5 5v13H7zM14 3v5h5M10 13h6M10 17h6"/></svg></button><button id="export-button" class="export-button" type="button" title="Скачать GeoJSON" aria-label="Скачать план GeoJSON"><svg viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M5 17v4h14v-4"/></svg></button></div></div>
+          <div class="risk-comparison">
+            <div class="risk-card risk-before"><span class="risk-card-label">БЕЗ ЛЕСОПОЛОСЫ</span><div><strong id="risk-before">—</strong><span>/100</span></div><small>балл модели</small></div>
+            <div class="risk-arrow">→</div>
+            <div class="risk-card risk-after"><span class="risk-card-label">С ЗАЩИТОЙ</span><div><strong id="risk-after">—</strong><span>/100</span></div><small>индекс выбранного набора</small></div>
+          </div>
+          <div class="reduction-row"><span class="reduction-icon">↓</span><strong id="risk-reduction">—</strong><span>относительное снижение индекса</span></div>
+          <p class="risk-scale-note">Шкала 0–100 баллов, без физических единиц. Это средний выход Random Forest по сетке поля и направлениям; это не вероятность бури.</p>
+          <div class="result-divider"></div>
+           <div class="recommendation-heading"><div><h3>Предварительный вариант размещения</h3><span id="recommendation-summary">—</span></div><span class="recommendation-check recommendation-review">!</span></div>
+          <div class="placement-reason"><strong>Где предлагается посадка</strong><p id="placement-reason-text">—</p><small id="placement-wind-angle"></small></div>
+          <div class="selection-reason"><strong>Почему столько полос</strong><p id="selection-reason-text">—</p></div>
+           <div class="gis-assessment" id="gis-assessment">
+             <strong>Проверка места по картам</strong>
+             <p id="gis-assessment-summary">ГИС-слои проверяются вдоль предложенных линий посадки.</p>
+             <div id="gis-assessment-details" class="gis-assessment-details"></div>
+             <small>Уклон рассчитывается и показывается, но пока не меняет размещение. Карта выявляет отмеченные на ней застройку и воду, однако кадастровые границы, дороги и зоны аэропортов не загружены. Права на землю, грунтовые воды и фактический анализ почвы не проверяются; линию нельзя считать разрешённой к посадке без местной проверки.</small>
+           </div>
+          <div class="scenario-result"><strong>Погодный сценарий</strong><p id="result-scenario-summary">—</p><small id="result-scenario-basis">—</small></div>
+          <div class="wind-profile-card"><div class="profile-head"><span>СКОРОСТЬ ВЕТРА ЗА ПОЛОСОЙ</span><span id="profile-height">H = 15 м</span></div><svg class="profile-chart" id="profile-chart" viewBox="0 0 300 100" preserveAspectRatio="none" aria-label="График изменения скорости ветра"><defs><linearGradient id="profile-fill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#6c9b69" stop-opacity=".25"/><stop offset="1" stop-color="#6c9b69" stop-opacity="0"/></linearGradient></defs><path class="profile-grid" d="M22 12H292M22 48H292M22 84H292"/><path id="profile-area" class="profile-area"/><path id="profile-line" class="profile-line"/><line class="profile-bar" x1="22" y1="12" x2="22" y2="84"/><circle id="profile-dot" class="profile-dot" r="3"/></svg><div class="profile-axis"><span>0H</span><span>5H</span><span>10H</span><span>15H</span><span>20H</span></div></div>
+          <div class="options-heading"><span>СРАВНЕНИЕ ЧИСЛА ПОЛОС</span><span>индекс · длина · защита</span></div>
+          <div class="option-list" id="option-list"></div>
+          <div class="belt-selection-heading"><strong>&#1054;&#1090;&#1076;&#1077;&#1083;&#1100;&#1085;&#1099;&#1077;&#32;&#1083;&#1077;&#1089;&#1086;&#1087;&#1086;&#1083;&#1086;&#1089;&#1099;</strong><small>&#1042;&#1082;&#1083;&#1102;&#1095;&#1072;&#1081;&#1090;&#1077;&#32;&#1080;&#1083;&#1080;&#32;&#1086;&#1090;&#1082;&#1083;&#1102;&#1095;&#1072;&#1081;&#1090;&#1077;&#32;&#1083;&#1080;&#1085;&#1080;&#1080;&#59;&#32;&#1088;&#1072;&#1089;&#1095;&#1105;&#1090;&#32;&#1086;&#1073;&#1085;&#1086;&#1074;&#1080;&#1090;&#1089;&#1103;&#46;</small></div>
+          <div class="belt-toggle-list" id="belt-toggle-list" aria-label="&#1042;&#1082;&#1083;&#1102;&#1095;&#1077;&#1085;&#1080;&#1077;&#32;&#1083;&#1077;&#1089;&#1086;&#1087;&#1086;&#1083;&#1086;&#1089;"></div>
+           <div class="result-method"><span class="method-spark">✳</span><span><strong>Как читать результат</strong><small>Погодный RF сравнивает сценарии ветровой защиты. Карты рельефа, земного покрова и почв дают отдельную предварительную проверку места посадки.</small></span><button id="result-info" aria-label="Подробнее о методе" type="button">?</button></div>
+           <p class="result-disclaimer" id="result-disclaimer">Индекс не является вероятностью события или оперативным прогнозом. Карты не подтверждают право посадки; SoilGrids имеет разрешение около 250 м и не заменяет анализ почвы на участке.</p>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <dialog id="info-dialog" class="info-dialog">
+    <form method="dialog"><button class="dialog-close" aria-label="Закрыть">×</button></form>
+    <span class="dialog-kicker">МЕТОД ПРОТОТИПА</span><h2 id="dialog-title">Цифровой двойник лесополос</h2>
+    <div class="dialog-body" id="dialog-body"><p>Пилотный регион — Элиста. Модель Random Forest обучена на погодных наблюдениях станции за 2010–2024 годы. Если пользователь не указывает погоду, расчёт автоматически использует типичные условия по архиву отмеченных пыльных бурь.</p><ol><li>Обведите контур поля на карте.</li><li>Нажмите «Рассчитать размещение».</li><li>Сервер выберет линию вдоль главной оси участка и объяснит результат в панели справа.</li></ol><p>Пыльная буря размечена по кодам meteo.ru 30–35. Индекс модели не является калиброванной вероятностью события. Суховеи отдельно не моделируются, пока для них нет разметки.</p></div>
+    <form method="dialog"><button class="button button-primary dialog-done">Понятно</button></form>
+  </dialog>
